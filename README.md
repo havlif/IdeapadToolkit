@@ -29,6 +29,7 @@
 | IdeaPad S145-14IWL - thanks [@Matee001](https://github.com/Matee001) |  ❌ | ❌ | ✅ | ❌ |
 | IdeaPad Z50-70 - credits [@Ozzypozzy](https://github.com/Ozzypozzy) | ❌ | ❌ | ✅ | ❌ |
 | Xiaoxin Pro-13 2020 - thanks [@BackMountainDevil](https://github.com/BackMountainDevil) | ✅ | ❌ | ✅ | ✅ |
+| IdeaPad Slim 3 16IRH10 - thanks [@ta2edh](https://github.com/ta2edh) | ✅ | ✅ | ✅ | ✅ |
 
 If you find your model is compatible and not on the list, please sumbit an issue
 
