@@ -25,7 +25,8 @@ namespace IdeapadToolkit.ViewModels
             [new Locale("English", "en-US"),
             new Locale("Čeština", "cs-CZ"),
             new Locale("Français", "fr-FR"),
-            new Locale("简体中文", "zh-CN")];
+            new Locale("简体中文", "zh-CN"),
+            new Locale("Türkçe", "tr-TR")];
 
         public bool IsRunOnStartupEnabled
         {
