@@ -140,11 +140,7 @@
   </data>
   <data name="EXTREME_PERFORMANCE" xml:space="preserve">
     <value>Performances maximales</value>
-  </data>
-  <data name="FLIP_TO_BOOT" xml:space="preserve">
-    <value>Ouvrir le capot pour démarrer</value>
-  </data>
-  <data name="HOME" xml:space="preserve">
+  </data><data name="HOME" xml:space="preserve">
     <value>Accueil</value>
   </data>
   <data name="INTELLIGENT_COOLING" xml:space="preserve">

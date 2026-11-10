@@ -140,11 +140,7 @@
   </data>
   <data name="EXTREME_PERFORMANCE" xml:space="preserve">
     <value>野兽模式</value>
-  </data>
-  <data name="FLIP_TO_BOOT" xml:space="preserve">
-    <value>开盖开机</value>
-  </data>
-  <data name="HOME" xml:space="preserve">
+  </data><data name="HOME" xml:space="preserve">
     <value>主页</value>
   </data>
   <data name="INTELLIGENT_COOLING" xml:space="preserve">

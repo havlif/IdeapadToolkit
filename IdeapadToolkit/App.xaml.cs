@@ -1,4 +1,4 @@
-﻿using IdeapadToolkit.Services;
+using IdeapadToolkit.Services;
 using IdeapadToolkit.ViewModels;
 using IdeapadToolkit.Views;
 using SimpleInjector;
@@ -39,7 +39,6 @@ namespace IdeapadToolkit
 
             container.RegisterSingleton<INavigationService, NavigationService>();
             container.RegisterSingleton<ILenovoPowerSettingsService, LenovoPowerSettingsService>();
-            container.RegisterSingleton<IUEFISettingsService, UEFISettingsService>();
             container.RegisterSingleton<IRunOnStartupService, RunOnStartupService>();
             container.RegisterSingleton<IAdministratorPermissionService, AdministratorPermissionService>();
             container.RegisterSingleton<TrayIconView>();
@@ -129,3 +128,4 @@ namespace IdeapadToolkit
         }
     }
 }
+

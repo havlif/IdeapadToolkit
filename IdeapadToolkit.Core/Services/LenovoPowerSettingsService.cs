@@ -72,7 +72,11 @@ namespace IdeapadToolkit.Core.Services
             instance = CIntelligentCooling(ref instance);
             PowerPlan newmode = new();
             int trash = 0;
-            _ = GetITSMode(ref instance, ref trash, ref newmode);
+            var result = GetITSMode(ref instance, ref trash, ref newmode);
+            if (result != 0 || !Enum.IsDefined(newmode))
+            {
+                throw new InvalidOperationException($"Power Profile read failed with native result {result}.");
+            }
             return newmode;
         }
 
@@ -80,14 +84,34 @@ namespace IdeapadToolkit.Core.Services
         {
             CIntelligentCooling instance = new();
             instance = CIntelligentCooling(ref instance);
-            _ = SetITSMode(ref instance, ref plan);
+            if (!Enum.IsDefined(plan))
+            {
+                throw new ArgumentOutOfRangeException(nameof(plan));
+            }
+
+            var result = SetITSMode(ref instance, ref plan);
+            if (result != 1)
+            {
+                throw new InvalidOperationException($"Power Profile write failed with native result {result}.");
+            }
+
+            if (GetPowerPlan() != plan)
+            {
+                throw new InvalidOperationException("Power Profile read-back did not match the requested mode.");
+            }
         }
 
         public ChargingMode GetChargingMode()
         {
             CChargingMode instance = new();
             instance = CChargingMode(ref instance);
-            ChargingMode mode = (ChargingMode)GetChargingMode(ref instance);
+            var result = GetChargingMode(ref instance);
+            if (!Enum.IsDefined(typeof(ChargingMode), result))
+            {
+                throw new InvalidOperationException($"Battery Charging Mode read failed with native result {result}.");
+            }
+
+            ChargingMode mode = (ChargingMode)result;
             return mode;
         }
 
@@ -95,13 +119,24 @@ namespace IdeapadToolkit.Core.Services
         {
             CChargingMode instance = new();
             instance = CChargingMode(ref instance);
+            if (!Enum.IsDefined(chargingMode))
+            {
+                throw new ArgumentOutOfRangeException(nameof(chargingMode));
+            }
+
+            int result;
             try
             {
-                _ = SetChargingMode(ref instance, (int)chargingMode);
+                result = SetChargingMode(ref instance, (int)chargingMode);
             }
             catch (SystemException)
             {
-                _ = SetChargingModeFallBack(ref instance, (int)chargingMode, false);
+                result = SetChargingModeFallBack(ref instance, (int)chargingMode, false);
+            }
+
+            if (GetChargingMode() != chargingMode)
+            {
+                throw new InvalidOperationException("Battery Charging Mode read-back did not match the requested mode.");
             }
         }
 
@@ -122,14 +157,19 @@ namespace IdeapadToolkit.Core.Services
         {
             CUSBCharger instance = new();
             instance = CUSBCharger(ref instance);
-            switch (alwaysOnUsbEnabled)
+            var result = alwaysOnUsbEnabled switch
             {
-                case true:
-                    _ = OpenFeature(ref instance);
-                    break;
-                case false:
-                    _ = CloseFeature(ref instance);
-                    break;
+                true => OpenFeature(ref instance),
+                false => CloseFeature(ref instance)
+            };
+            if (result is not (0 or 1 or 2))
+            {
+                throw new InvalidOperationException($"Always On USB write failed with native result {result}.");
+            }
+
+            if (IsAlwaysOnUsbEnabled() != alwaysOnUsbEnabled)
+            {
+                throw new InvalidOperationException("Always On USB read-back did not match the requested state.");
             }
         }
 
@@ -150,14 +190,19 @@ namespace IdeapadToolkit.Core.Services
         {
             CUSBBatteryCharger instance = new();
             instance = CUSBBatteryCharger(ref instance);
-            switch (alwaysOnUsbBattryEnabled)
+            var result = alwaysOnUsbBattryEnabled switch
             {
-                case true:
-                    _ = OpenFeature(ref instance);
-                    break;
-                case false:
-                    _ = CloseFeature(ref instance);
-                    break;
+                true => OpenFeature(ref instance),
+                false => CloseFeature(ref instance)
+            };
+            if (result is not (0 or 1 or 2))
+            {
+                throw new InvalidOperationException($"Always On USB on battery write failed with native result {result}.");
+            }
+
+            if (IsAlwaysOnUsbBatteryEnabled() != alwaysOnUsbBattryEnabled)
+            {
+                throw new InvalidOperationException("Always On USB on battery read-back did not match the requested state.");
             }
         }
     }

@@ -18,7 +18,7 @@
             <StackPanel Spacing="16">
                 <TextBlock FontSize="24" Text="{x:Bind loc:Strings.POWER_PROFILE}" />
                 <StackPanel>
-                    <RadioButtons SelectedItem="{x:Bind ViewModel.Plan}">
+                    <RadioButtons>
                         <RadioButton
                             Command="{x:Bind ViewModel.SetPlanCommand}"
                             Content="{x:Bind loc:Strings.BATTERY_SAVING}"
@@ -80,28 +80,9 @@
                 </StackPanel>
                 <TextBlock FontSize="24" Text="{x:Bind loc:Strings.OTHER}" />
                 <StackPanel Spacing="16">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <ToggleSwitch
-                            Header="{x:Bind loc:Strings.FLIP_TO_BOOT}"
-                            IsEnabled="{x:Bind ViewModel.IsAdministrator}"
-                            IsOn="{x:Bind ViewModel.IsFlipToBootEnabled, Mode=TwoWay}" />
-                        <Button
-                            Padding="4"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Command="{x:Bind ViewModel.RestartAsAdminCommand}"
-                            Visibility="{x:Bind ViewModel.IsAdministrator, Converter={StaticResource InvBoolToVisConv}}">
-                            <Image
-                                Width="24"
-                                Height="24"
-                                Source="ms-appx:///Resources/admin.png" />
-                        </Button>
-                    </StackPanel>
-                    <ToggleSwitch Header="{x:Bind loc:Strings.ALWAYS_ON_USB}" IsOn="{x:Bind ViewModel.IsAlwaysOnUsbEnabled, Mode=TwoWay}" />
                     <ToggleSwitch
-                        Header="{x:Bind loc:Strings.ALWAYS_ON_USB_BATTERY}"
-                        IsEnabled="{x:Bind ViewModel.IsAlwaysOnUsbEnabled}"
-                        IsOn="{x:Bind ViewModel.IsAlwaysOnUsbBatteryEnabled, Mode=TwoWay}" />
+                        Header="{x:Bind loc:Strings.ALWAYS_ON_USB}"
+                        IsOn="{x:Bind ViewModel.IsAlwaysOnUsbCombinedEnabled, Mode=TwoWay}" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

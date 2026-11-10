@@ -28,12 +28,12 @@ public sealed partial class MainWindow : WinUIEx.WindowEx
         }
 
         var page = args?.InvokedItemContainer?.Tag as string;
-        if (page != null)
+        if (page != null && args?.RecommendedNavigationTransitionInfo is { } transition)
         {
             switch (page)
             {
                 case "Home":
-                    _navigationService.Navigate<MainPage>(null, args.RecommendedNavigationTransitionInfo);
+                    _navigationService.Navigate<MainPage>(null, transition);
                     break;
             }
         }

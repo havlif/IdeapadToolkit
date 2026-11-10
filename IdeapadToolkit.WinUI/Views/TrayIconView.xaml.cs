@@ -23,7 +23,7 @@ public sealed partial class TrayIconView : Page
         get;
     }
 
-    public event EventHandler TrayIconClicked;
+    public event EventHandler? TrayIconClicked;
 
     [RelayCommand]
     private void OnTrayIconClicked()

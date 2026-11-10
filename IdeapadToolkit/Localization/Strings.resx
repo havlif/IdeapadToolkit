@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -140,11 +140,7 @@
   </data>
   <data name="EXTREME_PERFORMANCE" xml:space="preserve">
     <value>Extreme Performance</value>
-  </data>
-  <data name="FLIP_TO_BOOT" xml:space="preserve">
-    <value>Flip to Boot</value>
-  </data>
-  <data name="HOME" xml:space="preserve">
+  </data><data name="HOME" xml:space="preserve">
     <value>Home</value>
   </data>
   <data name="INTELLIGENT_COOLING" xml:space="preserve">

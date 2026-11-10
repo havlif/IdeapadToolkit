@@ -17,7 +17,7 @@ internal class Settings
 
     private static string _path => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "IdeapadToolkit", "settings.txt");
 
-    public string Language { get; set; }
+    public string Language { get; set; } = "en-US";
     public bool KeepInTray { get; set; }
 
     public void Save()
@@ -93,7 +93,7 @@ internal partial class SettingsViewModel : ObservableObject
                     Title = "Error",
                     Content = ex.Message,
                     CloseButtonText = "Ok",
-                    XamlRoot = App.MainWindow.Content.XamlRoot
+                    XamlRoot = App.MainWindow?.Content.XamlRoot
                 }.ShowAsync();
             }
         }

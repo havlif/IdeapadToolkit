@@ -1,4 +1,4 @@
-﻿<ui:Page
+<ui:Page
     x:Class="IdeapadToolkit.Views.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -85,28 +85,7 @@
                     FontSize="24"
                     Text="{x:Static loc:Strings.OTHER}" />
                 <ui:SimpleStackPanel Spacing="16">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
-                        <ui:ToggleSwitch
-                            Width="auto"
-                            ui:ControlHelper.Header="{x:Static loc:Strings.FLIP_TO_BOOT}"
-                            IsEnabled="{Binding IsAdministrator}"
-                            IsOn="{Binding IsFlipToBootEnabled}" />
-                        <Button
-                            Padding="4"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Command="{Binding RestartAsAdminCommand}"
-                            Visibility="{Binding IsAdministrator, Converter={StaticResource InvBoolToVisConv}}">
-                            <Button.Content>
-                                <Image
-                                    Width="24"
-                                    Height="24"
-                                    Margin="0"
-                                    Source="/Resources/admin.png" />
-                            </Button.Content>
-                        </Button>
-                    </ui:SimpleStackPanel>
-                    <ui:ToggleSwitch ui:ControlHelper.Header="{x:Static loc:Strings.ALWAYS_ON_USB}" IsOn="{Binding IsAlwaysOnUsbEnabled}" />
+<ui:ToggleSwitch ui:ControlHelper.Header="{x:Static loc:Strings.ALWAYS_ON_USB}" IsOn="{Binding IsAlwaysOnUsbEnabled}" />
                     <ui:ToggleSwitch
                         ui:ControlHelper.Header="{x:Static loc:Strings.ALWAYS_ON_USB_BATTERY}"
                         IsEnabled="{Binding IsAlwaysOnUsbEnabled}"
@@ -116,3 +95,4 @@
         </ScrollViewer>
     </Grid>
 </ui:Page>
+

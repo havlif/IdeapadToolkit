@@ -103,7 +103,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="PowerBattery.dll">
+    <None Include="..\IdeapadToolkit\PowerBattery.dll" Link="PowerBattery.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

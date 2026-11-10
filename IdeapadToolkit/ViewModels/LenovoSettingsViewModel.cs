@@ -12,18 +12,16 @@ namespace IdeapadToolkit.ViewModels
     [CommunityToolkit.Mvvm.ComponentModel.INotifyPropertyChanged]
     public partial class LenovoSettingsViewModel
     {
-        public LenovoSettingsViewModel(ILenovoPowerSettingsService lenovoPowerSettingsService, IUEFISettingsService uEFISettingsService, IAdministratorPermissionService administratorPermissionService, ILogger logger)
+        public LenovoSettingsViewModel(ILenovoPowerSettingsService lenovoPowerSettingsService, IAdministratorPermissionService administratorPermissionService, ILogger logger)
         {
             _lenovoPowerSettingsService = lenovoPowerSettingsService;
-            _uEFISettingsService = uEFISettingsService;
             _administratorPermissionService = administratorPermissionService;
             _logger = logger;
             Refresh();
         }
 
         private readonly ILenovoPowerSettingsService _lenovoPowerSettingsService;
-        private readonly IUEFISettingsService _uEFISettingsService;
-        private IAdministratorPermissionService _administratorPermissionService;
+        private readonly IAdministratorPermissionService _administratorPermissionService;
         private readonly ILogger _logger;
 
         [ObservableProperty]
@@ -75,41 +73,6 @@ namespace IdeapadToolkit.ViewModels
         #endregion
 
         #region OtherProperties
-        public bool IsFlipToBootEnabled
-        {
-            get
-            {
-                if (IsAdministrator)
-                {
-                    bool res = false;
-                    try
-                    {
-                        res = _uEFISettingsService.GetFlipToBootStatus();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex, "Exception while getting FlipToBoot status");
-                    }
-                    return res;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            set
-            {
-                try
-                {
-                    _uEFISettingsService.SetFlipToBootStatus(value);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "Exception while setting FlipToBoot status");
-                }
-            }
-        }
-
         public bool IsAlwaysOnUsbEnabled
         {
             get

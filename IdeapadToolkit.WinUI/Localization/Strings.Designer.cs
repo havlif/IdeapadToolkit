@@ -135,11 +135,6 @@ namespace IdeapadToolkit.WinUI3.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Flip to Boot.
         /// </summary>
-        public static string FLIP_TO_BOOT {
-            get {
-                return ResourceManager.GetString("FLIP_TO_BOOT", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Home.

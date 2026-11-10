@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 using IdeapadToolkit.Core.Services;
 using IdeapadToolkit.WinUI3.Helpers;
 using IdeapadToolkit.WinUI3.Localization;
@@ -45,8 +45,7 @@ public partial class App : Application
                     .CreateLogger();
             })
             .RootBind<ILenovoPowerSettingsService>().As(Lifetime.Singleton).To<LenovoPowerSettingsService>()
-            .RootBind<IUEFISettingsService>().As(Lifetime.Singleton).To<UEFISettingsService>()
-            .RootBind<IAdministratorPermissionService>().As(Lifetime.Singleton).To<AdministratorPermissionService>()
+            .RootBind<IDeviceProfileService>().As(Lifetime.Singleton).To<DeviceProfileService>()
             .Bind().As(Lifetime.Singleton).To<TrayIconView>().Root<TrayIconView>()
             .Bind<IRunOnStartupService>().As(Lifetime.Singleton).To<RunOnStartupService>()
             .Bind().As(Lifetime.Singleton).To<MainPageViewModel>().Root<MainPageViewModel>()
@@ -93,7 +92,7 @@ public partial class App : Application
         }
         if (arguments?.Any(x => x.Contains("nogui")) != true)
         {
-            ShowMainWindow(null, null);
+            ShowMainWindow(null, EventArgs.Empty);
         }
 
         var iconView = Composition.Resolve<TrayIconView>();
@@ -106,7 +105,7 @@ public partial class App : Application
         Composition.Resolve<ILogger>().Fatal((Exception)e.ExceptionObject, "Unhandled exception");
     }
 
-    private void ShowMainWindow(object sender, EventArgs args)
+    private void ShowMainWindow(object? sender, EventArgs args)
     {
         if (MainWindow == null)
         {
@@ -140,6 +139,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
+            Composition.Resolve<ILogger>().Warning(ex, "Unable to apply saved culture");
         }
     }
 
@@ -152,3 +152,4 @@ public partial class App : Application
 
     internal static Composition Composition = null!;
 }
+

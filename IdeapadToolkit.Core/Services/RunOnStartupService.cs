@@ -1,20 +1,22 @@
 ﻿using Microsoft.Win32;
+using System.Runtime.Versioning;
 
 namespace IdeapadToolkit.Core.Services
 {
+    [SupportedOSPlatform("windows")]
     public class RunOnStartupService : IRunOnStartupService
     {
         private static string _assemblyPath
         {
             get
             {
-                return Environment.ProcessPath;
+                return Environment.ProcessPath ?? string.Empty;
             }
         }
         public bool IsRunOnStartupEnabled()
         {
             bool result;
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run"))
+            using (RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run"))
             {
                 bool flag = key == null;
                 if (flag)
@@ -23,7 +25,7 @@ namespace IdeapadToolkit.Core.Services
                 }
                 else
                 {
-                    object o = key.GetValue("IdeapadToolkit");
+                    object? o = key!.GetValue("IdeapadToolkit");
                     result = o != null;
                 }
             }
@@ -44,13 +46,13 @@ namespace IdeapadToolkit.Core.Services
 
         private static void DisableRunAtStartup()
         {
-            using RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            using RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             bool flag = key != null;
             if (flag)
             {
                 try
                 {
-                    key.DeleteValue("IdeapadToolkit");
+                    key!.DeleteValue("IdeapadToolkit");
                 }
                 catch (ArgumentException)
                 {
@@ -60,8 +62,8 @@ namespace IdeapadToolkit.Core.Services
 
         private static void EnableRunAtStartup()
         {
-            using RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            key.SetValue("IdeapadToolkit", _assemblyPath + " nogui");
+            using RegistryKey? key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            key?.SetValue("IdeapadToolkit", _assemblyPath + " nogui");
         }
     }
 }

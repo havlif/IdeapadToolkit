@@ -1,8 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IdeapadToolkit.Core.Models;
 using IdeapadToolkit.Core.Services;
-using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using System.Threading.Tasks;
 
@@ -10,17 +9,22 @@ namespace IdeapadToolkit.WinUI3.ViewModels;
 internal partial class MainPageViewModel : ObservableObject
 {
     private readonly ILenovoPowerSettingsService _lenovoPowerSettingsService;
-    private readonly IUEFISettingsService _uEFISettingsService;
-    private IAdministratorPermissionService _administratorPermissionService;
+    private readonly DeviceProfile _deviceProfile;
     private ILogger _logger;
 
     internal MainPageViewModel()
     {
         _lenovoPowerSettingsService = App.Composition.Resolve<ILenovoPowerSettingsService>();
-        _uEFISettingsService = App.Composition.Resolve<IUEFISettingsService>();
-        _administratorPermissionService = App.Composition.Resolve<IAdministratorPermissionService>();
+        _deviceProfile = App.Composition.Resolve<IDeviceProfileService>().GetCurrentProfile();
         _logger = App.Composition.Resolve<ILogger>();
     }
+
+    public bool IsSupportedDevice => _deviceProfile.IsSupported;
+    public bool SupportsPowerProfile => _deviceProfile.Capabilities.SupportsPowerProfile;
+    public bool SupportsChargingMode => _deviceProfile.Capabilities.SupportsNormalChargingMode;
+    public bool SupportsAlwaysOnUsb => _deviceProfile.Capabilities.SupportsAlwaysOnUsb;
+    public bool SupportsAlwaysOnUsbOnBattery => _deviceProfile.Capabilities.SupportsAlwaysOnUsbOnBattery;
+    public string ErrorMessage { get; private set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEfficientChecked), nameof(IsIntelligentCoolingChecked), nameof(IsExtremePerformanceChecked), nameof(IconSource))]
@@ -37,6 +41,8 @@ internal partial class MainPageViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            ErrorMessage = ex.Message;
+            OnPropertyChanged(nameof(ErrorMessage));
             _logger.Error(ex, "Exception while fetching current settings");
         }
     }
@@ -68,38 +74,30 @@ internal partial class MainPageViewModel : ObservableObject
     #endregion
 
     #region OtherProperties
-    public bool IsFlipToBootEnabled
+    public bool IsAlwaysOnUsbCombinedEnabled
     {
-        get
-        {
-            if (IsAdministrator)
-            {
-                bool res = false;
-                try
-                {
-                    res = _uEFISettingsService.GetFlipToBootStatus();
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "Exception while getting FlipToBoot status");
-                }
-                return res;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        get => IsAlwaysOnUsbEnabled && IsAlwaysOnUsbBatteryEnabled;
         set
         {
             try
             {
-                _uEFISettingsService.SetFlipToBootStatus(value);
+                if (value)
+                {
+                    _lenovoPowerSettingsService.SetAlwaysOnUsb(true);
+                    _lenovoPowerSettingsService.SetAlwaysOnUsbBattery(true);
+                }
+                else
+                {
+                    _lenovoPowerSettingsService.SetAlwaysOnUsbBattery(false);
+                    _lenovoPowerSettingsService.SetAlwaysOnUsb(false);
+                }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception while setting FlipToBoot status");
+                _logger.Error(ex, "Error while setting combined Always On USB setting");
             }
+
+            OnPropertyChanged(nameof(IsAlwaysOnUsbCombinedEnabled));
         }
     }
 
@@ -206,8 +204,6 @@ internal partial class MainPageViewModel : ObservableObject
             return path;
         }
     }
-    public bool IsAdministrator => _administratorPermissionService.IsAdministrator;
-
     [RelayCommand]
     private void SetChargingMode(int? mode)
     {
@@ -219,25 +215,9 @@ internal partial class MainPageViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            ErrorMessage = ex.Message;
+            OnPropertyChanged(nameof(ErrorMessage));
             _logger.Error(ex, "Error while setting charging mode");
-        }
-    }
-
-    [RelayCommand]
-    private async Task RestartAsAdmin()
-    {
-        var res = await new ContentDialog
-        {
-            Title = "Permission required",
-            Content = "The program will now restart as administrator",
-            PrimaryButtonText = "Ok",
-            SecondaryButtonText = "Cancel",
-            XamlRoot = App.MainWindow.Content.XamlRoot
-        }.ShowAsync();
-
-        if (res == ContentDialogResult.Primary)
-        {
-            _administratorPermissionService.RelaunchAsAdmin();
         }
     }
 
@@ -252,7 +232,10 @@ internal partial class MainPageViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            ErrorMessage = ex.Message;
+            OnPropertyChanged(nameof(ErrorMessage));
             _logger.Error(ex, "Exception while setting power plan");
         }
     }
 }
+
